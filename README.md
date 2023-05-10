@@ -61,7 +61,7 @@ Now it is time to setup the destination Slack channel/location with it's corresp
 Navigate to a channel and go to the Integrations tab and click `Add a Workflow`.
 ![alt text](https://github.com/2018-lonely-droid/dailyLeetcodeSlackBot/blob/main/images/img_3.jpg?raw=true)
 
-Click the `Webhook ADVANCED` option.
+Click the `Webhook ADVANCED` option.                                               
 ![alt text](https://github.com/2018-lonely-droid/dailyLeetcodeSlackBot/blob/main/images/img_4.jpg?raw=true)
 
 Click the `Add Variable` button and click `Next`
