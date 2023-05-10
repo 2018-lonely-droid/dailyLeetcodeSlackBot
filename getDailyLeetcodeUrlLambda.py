@@ -52,7 +52,7 @@ def lambda_handler(event, context):
     questionName, questionUrl, questionDifficulty = scrapePage()
 
     # Webhook Info
-    webhookUrl = 'https://hooks.slack.com/workflows/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'    
+    webhookUrl = 'https://hooks.slack.com/workflows/XXXXXXXXXXX/XXXXXXXXXXX/XXXXXXXXXXXXXXXXX/XXXXXXXXXXXXXXXXXXXXXXX'    
     slackData = {
         "questionName": questionName,
         "questionUrl": questionUrl,

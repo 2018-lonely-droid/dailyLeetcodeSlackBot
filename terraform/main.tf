@@ -170,7 +170,6 @@ resource "aws_scheduler_schedule" "weekdaysAt8AM" {
   }
 
   # Post the new leetcode question to slack week days at 8 am
-  # schedule_expression = "cron(0/1 * * * ? *)"
   schedule_expression = "cron(0 8 ? * MON-FRI *)"
 
   target {
