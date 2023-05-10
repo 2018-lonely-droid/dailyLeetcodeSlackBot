@@ -74,7 +74,7 @@ resource "aws_iam_role" "lambda_getDailyLeetcodeUrl_execution_role" {
 data "archive_file" "lambda" {
   type        = "zip"
   source_file = "../getDailyLeetcodeUrlLambda.zip"
-  output_path = "getDailyLeetcodeUrlLambda.zip"
+  output_path = "../getDailyLeetcodeUrlLambda.zip"
 }
 
 resource "aws_lambda_function" "getDailyLeetcodeUrl" {

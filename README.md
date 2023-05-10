@@ -14,6 +14,12 @@ Leetcode has [one public page that lists all the problems on the website](https:
 
 Using the selenium webscraping library in python (because the elements are in javascript blocks) we can scrape the url, name, and difficulty of the question of the day and send it to slack so that we never have to leave our work messages to see what the daily problem is. 
 
+## How is this possible? 
+
+![alt text](https://github.com/2018-lonely-droid/dailyLeetcodeSlackBot/blob/main/images/img_10.jpg?raw=true)
+
+Terraform is used to deploy the lambda and the required python libraries to an S3 bucket. Then an EventBridge Scheduler task is created that will run the lambda every day at 8am and send it to a Slack Workflow. The lambda is written in python and loads a chromium headless browser to scrape the leetcode website then posts the obtained data to the Slack Workflow webhook.
+
 ## Let's Build It!
 
 ### Configure the aws CLI profile
