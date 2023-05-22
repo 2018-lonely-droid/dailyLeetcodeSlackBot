@@ -81,7 +81,7 @@ Here is an example `IAM policy` that you can attach to your new account.
 }
 ```
 
-*Please note that this permission set only allows the creation of the resources needed to **deploy** the Slack Workflow Daily Leetcode Question Bot NOT ****destroy** the resources. So you will have to add more permissions to your `IAM User` account policy, or manually destroy the resources in the IAM console with another account that has privileges to do so.*
+_Please note that this permission set only allows the creation of the resources needed to **deploy** the Slack Workflow Daily Leetcode Question Bot NOT **destroy** the resources. So you will have to add more permissions to your `IAM User` account policy, or manually destroy the resources in the IAM console with another account that has privileges to do so._
 
 
 ### Configure the AWS CLI profile
