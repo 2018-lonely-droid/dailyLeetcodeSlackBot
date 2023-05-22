@@ -22,19 +22,75 @@ Terraform is used to deploy the lambda and the required python libraries to an S
 
 ## Let's Build It!
 
-### Configure the aws CLI profile
+### Configure the AWS CLI profile
 
-The aws cli has to be configured on your local machine to be able to authenticate the terraform commands that will build this solution. The [official documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html) can walk you though how to set this up in greater detail. There are also many ways to use aws cli credentails with terraform, and I will be using aws cli profiles below, but be aware you can change this to better fit your needs.
+The AWS cli has to be configured on your local machine to be able to authenticate the terraform commands that will build this solution. The [official documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html) can walk you though how to set this up in greater detail. There are also many ways to use AWS cli credentails with terraform, and I will be using AWS cli profiles below, but be aware you can change this to better fit your needs.
 
-Assuming you want to create a new aws cli profile to use this integration, you would want to first create a new `IAM User` in the aws console and retrieve the aws access key and secret access key.
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "sts:GetCallerIdentity",
+                "iam:GetPolicy",
+                "iam:GetRole",
+                "iam:GetPolicyVersion",
+                "iam:ListRolePolicies",
+                "iam:ListAttachedRolePolicies",
+                "iam:CreateRole",
+                "iam:CreatePolicy",
+                "iam:AttachRolePolicy",
+                "iam:PassRole",
+                "logs:DescribeLogGroups",
+                "logs:ListTagsLogGroup",
+                "logs:CreateLogGroup",
+                "logs:PutRetentionPolicy",
+                "s3:ListBucket",
+                "s3:GetBucketTagging",
+                "s3:GetBucketPolicy",
+                "s3:GetBucketAcl",
+                "s3:GetBucketCors",
+                "s3:GetBucketWebsite",
+                "s3:GetBucketVersioning",
+                "s3:GetAccelerateConfiguration",
+                "s3:GetBucketObjectLockConfiguration",
+                "s3:GetBucketRequestPayment",
+                "s3:GetBucketLogging",
+                "s3:GetLifecycleConfiguration",
+                "s3:GetReplicationConfiguration",
+                "s3:GetEncryptionConfiguration",
+                "s3:GetObject",
+                "s3:GetObjectTagging",
+                "s3:CreateBucket",
+                "s3:PutObject",
+                "s3:PutBucketTagging",
+                "lambda:ListVersionsByFunction",
+                "lambda:GetLayerVersion",
+                "lambda:GetFunction",
+                "lambda:GetFunctionCodeSigningConfig",
+                "lambda:CreateFunction",
+                "lambda:PublishLayerVersion",
+                "lambda:UpdateFunctionCode",
+                "scheduler:GetSchedule",
+                "scheduler:CreateSchedule"
+            ],
+            "Effect": "Allow",
+            "Resource": "*"
+        }
+    ]
+}
+```
 
-Then you will want to open up terminal on your local machine and navigate to the aws credentials file. Here is how you can do this on Mac:
+Assuming you want to create a new AWS cli profile to use this integration, you would want to first create a new `IAM User` in the AWS console and retrieve the AWS access key and secret access key.
+
+Then you will want to open up terminal on your local machine and navigate to the AWS credentials file. Here is how you can do this on Mac:
 `cd ~/.aws`
 `nano credentials`
 
-Note here that I am using the [nano editor](https://www.nano-editor.org/docs.php) to edit the aws credentials file, but you can use your editor of choice (VIM, etc.)
+Note here that I am using the [nano editor](https://www.nano-editor.org/docs.php) to edit the AWS credentials file, but you can use your editor of choice (VIM, etc.)
 
-With the file open, add a new aws profile with the name you would like to use to identify the `IAM User`. Mine in this example is `terraform_test`. If you want to use the default aws profile, make sure to leave it as `[default]`.
+With the file open, add a new AWS profile with the name you would like to use to identify the `IAM User`. Mine in this example is `terraform_test`. If you want to use the default AWS profile, make sure to leave it as `[default]`.
 
 ```
 [terraform_test]
@@ -42,9 +98,9 @@ aws_access_key_id = XXXXXXXXXXXXXXXXXX
 aws_secret_access_key = XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
-Use `Control` + `X` to exit nano, and hit `Enter` or yes to "save buffer" (Save the edits made to the aws credentials file)
+Use `Control` + `X` to exit nano, and hit `Enter` or yes to "save buffer" (Save the edits made to the AWS credentials file)
 
-Now you will need to add this new aws credentials profile name to the terraform/provider.tf file. Also take this time to edit your aws region if you want to deploy in any region other than `us-east-1`.
+Now you will need to add this new AWS credentials profile name to the terraform/provider.tf file. Also take this time to edit your AWS region if you want to deploy in any region other than `us-east-1`.
 
 Here is what your provider.tf file should look like. Make sure to save the file as terraform will not remmeber any updates if the files are not deliberately saved.
 ```
@@ -58,7 +114,7 @@ To make sure your configuration is valid, open up a terminal in the project fold
 
 Make sure to navigate to the terraform folder. On Mac you can do this with `cd terraform`.
 
-Once in the terraform folder, initialize terraform with the `run terraform init` command. If it is successful, then you know that terraform was able to find your aws profile configured and load all the aws modules properly.
+Once in the terraform folder, initialize terraform with the `run terraform init` command. If it is successful, then you know that terraform was able to find your AWS profile configured and load all the AWS modules properly.
 
 ### Create Slack Integration Workflow
 
@@ -112,10 +168,14 @@ Lastly, zip up the python file and rename is to `getDailyLeetcodeUrlLambda.zip`!
 
 ### Deploy Terraform Code
 
-Now all that is left is to deploy the resources to your aws account! Open terminal again and navigate to the root of the `terraform` folder. (Where you ran `terraform init`).
+Now all that is left is to deploy the resources to your AWS account! Open terminal again and navigate to the root of the `terraform` folder. (Where you ran `terraform init`).
 
 You can run `terraform plan` to see all the resources that will be deployed for this Slackbot to be set up. You can also peruse the `terraform/main.tf` file where all the resources are declared.
 
 Running `terraform apply -auto-approve` terraform command will deploy the resources needed to start sending a daily leetcode problem to Slack!
 
 
+![alt text](https://github.com/2018-lonely-droid/dailyLeetcodeSlackBot/blob/main/images/img_11.jpg?raw=true)
+![alt text](https://github.com/2018-lonely-droid/dailyLeetcodeSlackBot/blob/main/images/img_12.jpg?raw=true)
+![alt text](https://github.com/2018-lonely-droid/dailyLeetcodeSlackBot/blob/main/images/img_13.jpg?raw=true)
+![alt text](https://github.com/2018-lonely-droid/dailyLeetcodeSlackBot/blob/main/images/img_14.jpg?raw=true)

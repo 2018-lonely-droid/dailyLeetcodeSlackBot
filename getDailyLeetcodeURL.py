@@ -33,7 +33,7 @@ for question in questionList:
     questionDifficulty = row[4].find('span').text
 
     # Send webhook to slack
-    webhookUrl = 'https://hooks.slack.com/workflows/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'    
+    webhookUrl = 'https://hooks.slack.com/workflows/XXXXXXXXXXX/XXXXXXXXXXX/XXXXXXXXXXXXXXXXX/XXXXXXXXXXXXXXXXXXXXXXX'     
     slackData = {
         "questionName": questionName,
         "questionUrl": questionUrl,
