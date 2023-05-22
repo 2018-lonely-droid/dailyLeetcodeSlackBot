@@ -165,7 +165,7 @@ To make sure your configuration is valid, open up a terminal in the project fold
 
 Make sure to navigate to the terraform folder. On Mac you can do this with `cd terraform`.
 
-Once in the terraform folder, initialize terraform with the `run terraform init` command. 
+Once in the terraform folder, initialize terraform with the `terraform init` command. 
 
 *[Terraform init](https://developer.hashicorp.com/terraform/cli/commands/init) is an essential command that initializes a Terraform working directory. It configures [the backend](https://developer.hashicorp.com/terraform/language/settings/backends/configuration) and downloads the required providers and modules. This command creates a .terraform directory in the working directory, which contains [the state](https://developer.hashicorp.com/terraform/language/state), [plugins](https://developer.hashicorp.com/terraform/cli/plugins), and [modules](https://developer.hashicorp.com/terraform/language/modules).*
 
