@@ -27,7 +27,7 @@ resource "aws_s3_object" "s3_lambda-layers_bs4" {
 
 resource "aws_s3_object" "s3_lambda-layers_selenium" {
   bucket = aws_s3_bucket.lambda-layers.id
-  key    = "layer-headless_chrome-v0.2-beta.0.zip"
+  key    = "layer-headless_chrome-v0.2-beta.zip"
   source = "../layer-headless_chrome-v0_2-beta.zip"
 }
 
