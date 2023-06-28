@@ -1,6 +1,9 @@
 # Remove terraform lock just for this example:
 .terraform.lock.hcl
 
+# DS
+.DS_Store
+
 # Ignore ZIp files
 *.zip
 
