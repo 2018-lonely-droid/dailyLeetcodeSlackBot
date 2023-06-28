@@ -42,11 +42,11 @@ __*The web scraping capability is not limited to leetcode. — Since we use a ch
 
 ### Access to an AWS Account
 
-An AWS account is needed to deploy this stack. The AWS account used will also need permission to create IAM Users, and an access key for the IAM User.
+An [AWS account](https://aws.amazon.com/resources/create-account/) is needed to deploy this stack. The AWS account used will also need permission to create IAM Users, and an access key for the IAM User.
 
 ### Install AWS CLI
 
-To use deploy AWS resources via Terraform, you will need to install the AWS CLI. Installation instructions vary per operating system, so check out the latest documentation [here](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) to install for your specific operating system.
+To use deploy AWS resources via Terraform, you will need to install the [AWS CLI](https://aws.amazon.com/cli/). Installation instructions vary per operating system, so check out the latest documentation [here](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) to install for your specific operating system.
 
 ### Install Terraform
 
@@ -64,6 +64,15 @@ To verify that the installation worked properly, try listing Terraform's availab
 
 `terraform -help`
 
+### Install Python
+
+To install Python version 3 on most operating systems, you can download the appropriate installer for your operating system from the [official Python website at python.org](https://www.python.org/downloads/). The latest version currently is Python 3.11.4. If there is an updated version in the future, it should be compatible. Alternatively, some operating systems such as Linux provide a package manager that can be run to install Python. On macOS, the best way to install Python involves installing a package manager called Homebrew.
+
+Once you have downloaded and run the installer you can verify that Python is installed by opening a command prompt and typing `python --version`.
+
+Python is required to download the a preconfigured zip file required for this project.
+
+
 ## Architecture
 
 ### Target Technology Stack
@@ -74,11 +83,16 @@ To verify that the installation worked properly, try listing Terraform's availab
 
 ### Target Architecture
 
-- pic
+![alt text](https://github.com/2018-lonely-droid/dailyLeetcodeSlackBot/blob/main/images/img_10.jpg?raw=true)
 
-An EventBridge scheduled event named `dailyLeetcodeUrlPush` triggers a Lambda called `dailyLeetcodeUrlPush` . The Lambda uses zipped [Lambda layers](https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html) housed in the `lambda-layers` S3 bucket at runtime. The `bs4.zip` Lambda layer is comprised of the [Beautiful Soup](https://beautiful-soup-4.readthedocs.io/en/latest/) Python library and its required dependencies. The `layer-headless_chrome-v0_2-beta.zip` Lambda layer is comprised of the Selenium Python library and its required dependencies, as well as a headless version of Chromium and the [ChromeDriver](https://chromedriver.chromium.org/).
+A. An EventBridge scheduled event named `dailyLeetcodeUrlPush` triggers a Lambda called `dailyLeetcodeUrlPush`. 
 
-This code repository includes the zipped Lambda layers `bs4.zip` and `layer-headless_chrome-v0_2-beta.zip`. It also includes the main Python file `getDaiyLeetcodeUrlLambda.py` that is ran in Lambda as `dailyLeetcodeUrlPush`. In the terraform folder, `main.tf` is ran to deploy the above resources into the target AWS Account.
+B. [Lambda layers](https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html) housed in the `lambda-layers` S3 bucket at runtime. The `layer-headless_chrome-v0_2-beta.zip` Lambda layer is comprised of the Selenium Python library and its required dependencies, as well as a headless version of Chromium and the [ChromeDriver](https://chromedriver.chromium.org/). The other Lambda layer is comprised of the Beautiful Soup Python library and its required dependencies that is provided by the public Amazon Resource (ARN) `arn:aws:lambda:us-east-1:770693421928:layer:Klayers-p38-beautifulsoup4:5` that come from a Github Repository of precompiled Python Lambda Layers called [Keith’s Layers](https://github.com/keithrozario/Klayers).
+
+C. A lambda named `dailyLeetcodeUrlPush` that will Web Scrape leetcode.com and publish results to a Slack webhook.
+
+The GitHub [dailyLeetcodeSlackBot](https://github.com/2018-lonely-droid/dailyLeetcodeSlackBot) code repository includes a `downloadChromeDriver.py` python script to download the `layer-headless_chrome-v0_2-beta.zip`. It also includes the main Python file `getDaiyLeetcodeUrlLambda.py` that is ran in Lambda as `dailyLeetcodeUrlPush`. In the terraform folder, `main.tf` is ran to deploy the above resources into the target AWS Account.
+
 
 ## Tools
 
@@ -90,6 +104,26 @@ This code repository includes the zipped Lambda layers `bs4.zip` and `layer-head
 ### Terraform by HashiCorp
 - [Terraform](https://www.terraform.io/) is an infrastructure as code tool that lets you build, change, and version cloud and on-prem resources safely and efficiently. It is comparable to [AWS Cloud Development Kit](https://aws.amazon.com/cdk/). *Terraform is used to easily deploy all the required AWS services for this integration.*
 - [Terraform AWS Provider](https://registry.terraform.io/providers/hashicorp/aws/latest/docs) can source credentials and other settings from the shared configuration and credentials files. *The Terraform AWS Provider is needed to interact with any AWS service.*
+
+### Python
+[Python](https://www.python.org/) is a high-level, general-purpose programming language. Python is used in this project to download a Lambda layer as well as be the base of the AWS Lambda code that scrapes leetcode.com
+
+
+## Download the Lambda Layer
+
+### Open your Python environment
+
+Once you have cloned the DailyLeetcodeSlackBot repository to your local machine, open a new Python environment via terminal/command prompt or inside your favorite [IDE](https://code.visualstudio.com/) at the root of the DailyLeetcodeSlackBot folder.
+
+### Install Python library urllib3 via pip
+
+[pip](https://packaging.python.org/en/latest/tutorials/installing-packages/) is a package-management system written in Python and is used to install and manage software packages. It is the preferred installer program for Python packages.
+
+Within the terminal window, type `pip install urllib3` to install the `urllib` library, which allows the download of the required Lambda layer file `layer-headless_chrome-v0_2-beta.zip`.
+
+### Run downloadChromeDriver.py
+
+Run downloadChromeDriver.py by clicking the `run` button if using an IDE, or simply type `python3 downloadChromeDriver.py` in the terminal. You will know it has successfuly downloaded when the `layer-headless_chrome-v0_2-beta.zip` appears in the root of the DailyLeetcodeSlackBot folder.
 
 
 ## Configure the AWS CLI profile
@@ -292,7 +326,7 @@ PRO TIP: Inside the AWS Console, under the `EventBridge` section you can create 
 If you made any edits to the resource block `"aws_scheduler_schedule"`  called `"weekdaysAt8AM"`, make sure to save the `terraform/main.tf` file to store changes.
 
 
-### Deploy Terraform Code
+## Deploy Terraform Code
 
 Now all that is left is to deploy the resources to your AWS account! Open terminal again and navigate to the root of the `terraform` folder. (Where you ran `terraform init`).
 
@@ -316,19 +350,21 @@ Click `Create new event` and add any value to `Event name`  - It is a mandatory 
 Then click `Save` and click `Test` again to start the test. The window below will start to show the execution logs. You will see the lambda running in real time. In less than two minutes you should get a ping in the Slack channel you created with the Leetcode question of the day!
 ![alt text](https://github.com/2018-lonely-droid/dailyLeetcodeSlackBot/blob/main/images/img_1.jpg?raw=true)
 
+
 ## Troubleshooting
 
-### `Error: configuring Terraform AWS Provider: validating provider credentials` when trying to run `terrafrom apply`
+#### `Error: configuring Terraform AWS Provider: validating provider credentials` when trying to run `terrafrom apply`
 
 Make sure the `aws_access_key_id` and the `aws_secret_access_key` provided in the `~/.aws/credentials` local file are correct.
 
-### The lambda runs for the max duration and end with a timeout error
+#### `Error: deleting Amazon EventBridge Scheduler Schedule (default/getDailyLeetcodeUrl): operation error Scheduler: DeleteSchedule, https response error StatusCode: 403` or `Error: removing policy arn:aws:iam::XXXXXXXXXXXX:policy/event_bridge_getDailyLeetcodeUrl_policy from IAM Role event_bridge_getDailyLeetcodeUrl_role: AccessDenied` are example errors that will occur if you try to delete the deployed terraform via the `terraform destroy -auto-approve` command.
+
+The IAM role permission set only allows the creation of the resources needed to deploy the Slack Workflow Daily Leetcode Question Bot NOT destroy the resources. To successfully delete all the resources, temporarily add IAM Role permissions that allow actions such as `delete` or `remove`. An easy way to do this is edit your `IAM User` by clicking the `Add permissions` button on the `Permissions policies` box. Click `Add permissions`, then `Attach policy directly`. Attach the policy `AdministratorAccess`, then click `Next` then `Add permissions`. You will now be able to delete all the infrastructure created by terraform. *Remember to remove the `IAM User` completly afterwards, or at the very least remove the `AdministratorAccess` policy.*
+
+#### `The lambda runs for the max duration and end with a timeout error`
 
 The lambda used requires a minimum of 500mb ram available in order for the chromium headless browser to function. If you use less than 500mb ram, the lambda will timeout and will not produce an error code. This has already been configured in Terraform to 500mb ram, but if you choose to use this lambda to scrape another website, it may require more ram to properly run.
 
-### `Error: deleting Amazon EventBridge Scheduler Schedule (default/getDailyLeetcodeUrl): operation error Scheduler: DeleteSchedule, https response error StatusCode: 403` or `Error: removing policy arn:aws:iam::XXXXXXXXXXXX:policy/event_bridge_getDailyLeetcodeUrl_policy from IAM Role event_bridge_getDailyLeetcodeUrl_role: AccessDenied` are example errors that will occur if you try to delete the deployed terraform via the `terraform destroy -auto-approve` command.
-
-The IAM role permission set only allows the creation of the resources needed to deploy the Slack Workflow Daily Leetcode Question Bot NOT destroy the resources. To successfully delete all the resources, temporarily add IAM Role permissions that allow actions such as `delete` or `remove`. An easy way to do this is edit your `IAM User` by clicking the `Add permissions` button on the `Permissions policies` box. Click `Add permissions`, then `Attach policy directly`. Attach the policy `AdministratorAccess`, then click `Next` then `Add permissions`. You will now be able to delete all the infrastructure created by terraform. *Remember to remove the `IAM User` completly afterwards, or at the very least remove the `AdministratorAccess` policy.*
 
 ## Related resources
 

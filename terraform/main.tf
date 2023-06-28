@@ -18,13 +18,7 @@ resource "aws_s3_bucket" "lambda-layers" {
   }
 }
 
-# Upload lambda layers to s3 bucket as zips
-resource "aws_s3_object" "s3_lambda-layers_bs4" {
-  bucket = aws_s3_bucket.lambda-layers.id
-  key    = "bs4.zip"
-  source = "../bs4.zip"
-}
-
+# # Upload lambda layers to s3 bucket as zips
 resource "aws_s3_object" "s3_lambda-layers_selenium" {
   bucket = aws_s3_bucket.lambda-layers.id
   key    = "layer-headless_chrome-v0.2-beta.zip"
@@ -32,14 +26,6 @@ resource "aws_s3_object" "s3_lambda-layers_selenium" {
 }
 
 # Add lambda layers that have been uploaded to s3
-resource "aws_lambda_layer_version" "lambda_layer_bs4" {
-  s3_bucket           = aws_s3_bucket.lambda-layers.id
-  s3_key              = aws_s3_object.s3_lambda-layers_bs4.id
-  layer_name          = "bs4"
-  description         = "https://beautiful-soup-4.readthedocs.io/en/latest/"
-  compatible_runtimes = ["python3.8"]
-}
-
 # This layer is larger than 50mb, hence it is required to be uploaded to S3
 resource "aws_lambda_layer_version" "lambda_layer_selenium" {
   s3_bucket           = aws_s3_bucket.lambda-layers.id
@@ -87,9 +73,12 @@ resource "aws_lambda_function" "getDailyLeetcodeUrl" {
   timeout          = 120
   memory_size      = 500
   layers = [
-    aws_lambda_layer_version.lambda_layer_bs4.arn,
+    "arn:aws:lambda:us-east-1:770693421928:layer:Klayers-p38-beautifulsoup4:5",
     aws_lambda_layer_version.lambda_layer_selenium.arn
   ]
+  # arn:aws:lambda:us-east-1:770693421928:layer:Klayers-p38-beautifulsoup4:5
+  # <- Comes from a library of precompiled lambda layers found in this repo:
+  # https://github.com/keithrozario/Klayers
   depends_on = [
     aws_iam_role_policy_attachment.getDailyLeetcodeUrl_logs,
     aws_cloudwatch_log_group.getDailyLeetcodeUrl_log_group,
